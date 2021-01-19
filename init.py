@@ -9,9 +9,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 import chess as ch
-from IPython.display import display, HTML, clear_output
 
 from engine.config import Values
+from engine.view import View
 
 
 def material_heuristic(board):
@@ -125,16 +125,6 @@ def get_heuristic_move(board, heuristic_depth, color):
     return max_move
 
 
-def display_board(board, use_svg=True):
-    if use_svg:
-        html = board._repr_svg_()
-    else:
-        html = "<pre>" + str(board) + "</pre>"
-
-    clear_output(wait=True)
-    display(HTML(html))
-
-
 def play_game(
         heuristic_depth,
         player_white="ai",
@@ -147,6 +137,9 @@ def play_game(
     white_turn = True
     game_over = False
 
+    display = View(board)
+    display.create_board()
+
     while not game_over:
         for player in players:
             if player == "heuristic":
@@ -154,18 +147,18 @@ def play_game(
                 board.push(move)
 
             if player == "human":
-                isValid = False
-                while not isValid:
+                is_valid = False
+                while not is_valid:
                     print('Black move: ')
                     move = input()
                     try:
                         board.push_uci(move)
-                        isValid = True
+                        is_valid = True
                     except BaseException:
-                        isValid = False
+                        is_valid = False
 
             if show_display:
-                display_board(board)
+                display.update_board(board)
             if delayed:
                 time.sleep(0.5)
 
@@ -178,4 +171,4 @@ def play_game(
     return board.result()
 
 
-play_game(5, "human", "heuristic")
+play_game(3, "human", "heuristic")
