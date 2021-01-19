@@ -1,55 +1,16 @@
-import pathlib
-import pickle
-import random
 import time
-import copy
 
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
 
 import chess as ch
 
-from engine.config import Values
 from engine.view import View
-
-
-def material_heuristic(board):
-    material_advantage = 0
-
-    for piece_type in ch.PIECE_TYPES:
-        white_pieces = board.pieces(piece_type, ch.WHITE)
-        black_pieces = board.pieces(piece_type, ch.BLACK)
-        material_advantage += Values.MATERIAL[piece_type - 1] * len(
-            white_pieces) - Values.MATERIAL[piece_type - 1] * len(black_pieces)
-
-    return material_advantage
-
-
-def piece_square_table_heuristic(board):
-    positional_advantage = 0
-
-    for piece_type in ch.PIECE_TYPES:
-
-        for square in board.pieces(piece_type, ch.WHITE):
-            position = 7 * (7 - int((square - 1) / 8)) + (square - 1) % 8
-            positional_advantage += Values.PIECES_SQUARE_TABLES[piece_type - 1][position]
-
-        for square in ch.flip_vertical(board.pieces(piece_type, ch.BLACK)):
-            position = 7 * (7 - int((square - 1) / 8)) + (square - 1) % 8
-            positional_advantage -= Values.PIECES_SQUARE_TABLES[piece_type - 1][position]
-
-    return positional_advantage
+from engine.evaluator import Evaluator
 
 
 max_depth = 10
 
 evaluated_boards = {}
-
-
-def evaluate_board(board):
-    return material_heuristic(board) + 0.5 * \
-        piece_square_table_heuristic(board)
 
 
 def minimax(board, depth, alpha, beta, max_player, player_color):
@@ -59,7 +20,7 @@ def minimax(board, depth, alpha, beta, max_player, player_color):
         final_move_score = -10000 if player_color == ch.BLACK else 10000
 
         if not (fen_description in evaluated_boards):
-            evaluated_boards[fen_description] = evaluate_board(board)
+            evaluated_boards[fen_description] = Evaluator.evaluate_board(board)
             if board.is_game_over():
                 if max_player:
                     evaluated_boards[fen_description] += -final_move_score
