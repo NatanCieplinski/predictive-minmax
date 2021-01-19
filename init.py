@@ -11,15 +11,7 @@ import matplotlib.pyplot as plt
 import chess as ch
 from IPython.display import display, HTML, clear_output
 
-# https://python-chess.readthedocs.io/en/latest/core.html
-# chess.PAWN:   chess.PieceType = 1
-# chess.KNIGHT: chess.PieceType = 2
-# chess.BISHOP: chess.PieceType = 3
-# chess.ROOK:   chess.PieceType = 4
-# chess.QUEEN:  chess.PieceType = 5
-# chess.KING:   chess.PieceType = 6
-
-material_values = [100, 305, 333, 563, 950, 10000]
+from engine.config import Values
 
 
 def material_heuristic(board):
@@ -28,41 +20,10 @@ def material_heuristic(board):
     for piece_type in ch.PIECE_TYPES:
         white_pieces = board.pieces(piece_type, ch.WHITE)
         black_pieces = board.pieces(piece_type, ch.BLACK)
-        material_advantage += material_values[piece_type - 1] * len(
-            white_pieces) - material_values[piece_type - 1] * len(black_pieces)
+        material_advantage += Values.MATERIAL[piece_type - 1] * len(
+            white_pieces) - Values.MATERIAL[piece_type - 1] * len(black_pieces)
 
     return material_advantage
-
-
-piece_square_tables = []
-
-# PAWN
-piece_square_tables.append([0, 0, 0, 0, 0, 0, 0, 0, 50, 50, 50, 50, 50, 50, 50, 50, 10, 10, 20, 30, 30, 20, 10, 10, 5, 5, 10, 25,
-                            25, 10, 5, 5, 0, 0, 0, 20, 20, 0, 0, 0, 5, -5, -10, 0, 0, -10, -5, 5, 5, 10, 10, -20, -20, 10, 10, 5, 0, 0, 0, 0, 0, 0, 0, 0])
-# KNIGHT
-piece_square_tables.append([-50, -40, -30, -30, -30, -30, -40, -50, -40, -20, 0, 0, 0, 0, -20, -40, -30, 0, 10, 15, 15, 10, 0, -30, -30, 5, 15, 20, 20,
-                            15, 5, -30, -30, 0, 15, 20, 20, 15, 0, -30, -30, 5, 10, 15, 15, 10, 5, -30, -40, -20, 0, 5, 5, 0, -20, -40, -50, -40, -30, -30, -30, -30, -40, -50, ])
-# BISHOP
-piece_square_tables.append([-20, -10, -10, -10, -10, -10, -10, -20, -10, 0, 0, 0, 0, 0, 0, -10, -10, 0, 5, 10, 10, 5, 0, -10, -10, 5, 5, 10, 10, 5,
-                            5, -10, -10, 0, 10, 10, 10, 10, 0, -10, -10, 10, 10, 10, 10, 10, 10, -10, -10, 5, 0, 0, 0, 0, 5, -10, -20, -10, -10, -10, -10, -10, -10, -20, ])
-# ROOK
-piece_square_tables.append([0, 0, 0, 0, 0, 0, 0, 0, 5, 10, 10, 10, 10, 10, 10, 5, -
-                            5, 0, 0, 0, 0, 0, 0, -
-                            5, -
-                            5, 0, 0, 0, 0, 0, 0, -
-                            5, -
-                            5, 0, 0, 0, 0, 0, 0, -
-                            5, -
-                            5, 0, 0, 0, 0, 0, 0, -
-                            5, -
-                            5, 0, 0, 0, 0, 0, 0, -
-                            5, 0, 0, 0, 5, 5, 0, 0, 0])
-# QUEEN
-piece_square_tables.append([-20, -10, -10, -5, -5, -10, -10, -20, -10, 0, 0, 0, 0, 0, 0, -10, -10, 0, 5, 5, 5, 5, 0, -10, -5, 0, 5, 5,
-                            5, 5, 0, -5, 0, 0, 5, 5, 5, 5, 0, -5, -10, 5, 5, 5, 5, 5, 0, -10, -10, 0, 5, 0, 0, 0, 0, -10, -20, -10, -10, -5, -5, -10, -10, -20])
-# KING
-piece_square_tables.append([-30, -40, -40, -50, -50, -40, -40, -30, -30, -40, -40, -50, -50, -40, -40, -30, -30, -40, -40, -50, -50, -40, -40, -30, -30, -40, -40, -
-                            50, -50, -40, -40, -30, -20, -30, -30, -40, -40, -30, -30, -20, -10, -20, -20, -20, -20, -20, -20, -10, 20, 20, 0, 0, 0, 0, 20, 20, 20, 30, 10, 0, 0, 10, 30, 20])
 
 
 def piece_square_table_heuristic(board):
@@ -72,11 +33,11 @@ def piece_square_table_heuristic(board):
 
         for square in board.pieces(piece_type, ch.WHITE):
             position = 7 * (7 - int((square - 1) / 8)) + (square - 1) % 8
-            positional_advantage += piece_square_tables[piece_type - 1][position]
+            positional_advantage += Values.PIECES_SQUARE_TABLES[piece_type - 1][position]
 
         for square in ch.flip_vertical(board.pieces(piece_type, ch.BLACK)):
             position = 7 * (7 - int((square - 1) / 8)) + (square - 1) % 8
-            positional_advantage -= piece_square_tables[piece_type - 1][position]
+            positional_advantage -= Values.PIECES_SQUARE_TABLES[piece_type - 1][position]
 
     return positional_advantage
 
