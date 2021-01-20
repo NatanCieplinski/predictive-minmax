@@ -1,4 +1,5 @@
 import chess
+
 from values import Values
 
 class Evaluator:
