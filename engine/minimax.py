@@ -2,7 +2,7 @@ import chess
 import numpy as np
 
 from engine.datasets import Datasets
-from engine.evaluator import Evaluator
+from engine.heuristics import Heuristics
 
 class Minimax:
     @staticmethod
@@ -13,7 +13,7 @@ class Minimax:
             final_move_score = -10000 if player_color == chess.BLACK else 10000
 
             if not (fen_description in Datasets.EVALUATED_BOARDS):
-                Datasets.EVALUATED_BOARDS[fen_description] = Evaluator.evaluate_board(board)
+                Datasets.EVALUATED_BOARDS[fen_description] = Heuristics.evaluate_board(board)
                 if board.is_game_over():
                     if max_player:
                         Datasets.EVALUATED_BOARDS[fen_description] += -final_move_score

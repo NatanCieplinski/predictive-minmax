@@ -2,7 +2,7 @@ import chess
 
 from engine.values import Values
 
-class Evaluator:
+class Heuristics:
     @staticmethod
     def material_heuristic(board):
         material_advantage = 0
@@ -34,5 +34,5 @@ class Evaluator:
     @staticmethod
     def evaluate_board(board):
         """Calculate the total heuristic"""
-        return Evaluator.material_heuristic(board) + 0.5 * \
-            Evaluator.piece_square_table_heuristic(board)
+        return Heuristics.material_heuristic(board) + 0.5 * \
+            Heuristics.piece_square_table_heuristic(board)

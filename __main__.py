@@ -1,55 +1,37 @@
 import time
-import numpy as np
 import chess
 
 from engine.view import View
-from engine.minimax import Minimax
+from engine.move_evaluator import MoveEvaluator
 from config import Config
 
-def get_heuristic_move(board, heuristic_depth, color):
-    max_move = None
-    max_eval = -np.inf
-
-    for move in board.legal_moves:
-        board.push(move)
-
-        evaluation = Minimax.minimax(board, heuristic_depth - 1, -
-                       np.inf, np.inf, False, color)
-
-        board.pop()
-
-        if evaluation > max_eval:
-            max_eval = evaluation
-            max_move = move
-
-    return max_move
-
-
 def main():
-    board = chess.Board()
-
     players = [Config.WHITE_PLAYER, Config.BLACK_PLAYER]
+    human_color = None
+    if "human" in players:
+        human_color = "White" if players[0] == "human" else "Black"
+
+    board = chess.Board()
+    display = View(board)
+
     white_turn = True
     game_over = False
-
-    display = View(board)
 
     while not game_over:
         for player in players:
             if player == "heuristic":
-                move = get_heuristic_move(board, Config.DEPTH, white_turn)
+                move = MoveEvaluator.find_best_move(board, Config.DEPTH, white_turn)
                 board.push(move)
 
             if player == "human":
-                is_valid = False
-                while not is_valid:
-                    print('Black move: ')
+                move_is_valid = True
+                while move_is_valid:
+                    print(f'{human_color} move: ')
                     move = input()
                     try:
                         board.push_uci(move)
-                        is_valid = True
                     except BaseException:
-                        is_valid = False
+                        move_is_valid = False
 
             if Config.SHOW_BOARD:
                 display.update_board(board)
