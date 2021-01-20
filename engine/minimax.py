@@ -1,8 +1,8 @@
 import chess
 import numpy as np
 
-from datasets import Datasets
-from evaluator import Evaluator
+from engine.datasets import Datasets
+from engine.evaluator import Evaluator
 
 class Minimax:
     @staticmethod

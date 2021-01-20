@@ -1,6 +1,6 @@
 import chess
 
-from values import Values
+from engine.values import Values
 
 class Evaluator:
     @staticmethod
