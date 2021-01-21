@@ -32,7 +32,21 @@ class Heuristics:
         return positional_advantage
 
     @staticmethod
+    def attack_heuristic(board):
+        trade_advantage = 0
+
+        for piece_type in chess.PIECE_TYPES:
+            for piece in board.pieces(piece_type, chess.WHITE):
+                trade_advantage += len(chess.SquareSet(board.attacks_mask(piece)))
+
+        for piece_type in chess.PIECE_TYPES:
+            for piece in board.pieces(piece_type, chess.BLACK):
+                trade_advantage -= len(chess.SquareSet(board.attacks_mask(piece)))
+
+        return trade_advantage
+
+    @staticmethod
     def evaluate_board(board):
         """Calculate the total heuristic"""
         return Heuristics.material_heuristic(board) + 0.5 * \
-            Heuristics.piece_square_table_heuristic(board)
+            Heuristics.piece_square_table_heuristic(board) + Heuristics.attack_heuristic(board)
