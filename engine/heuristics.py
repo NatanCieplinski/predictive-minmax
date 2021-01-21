@@ -48,5 +48,4 @@ class Heuristics:
     @staticmethod
     def evaluate_board(board):
         """Calculate the total heuristic"""
-        return Heuristics.material_heuristic(board) + 0.5 * \
-            Heuristics.piece_square_table_heuristic(board) + 0.3 * Heuristics.attack_heuristic(board)
+        return Heuristics.material_heuristic(board) + 0.5 * Heuristics.piece_square_table_heuristic(board) + 0.3 * Heuristics.attack_heuristic(board)

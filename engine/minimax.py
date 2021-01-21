@@ -20,8 +20,7 @@ class Minimax:
                     else:
                         Datasets.EVALUATED_BOARDS[fen_description] += final_move_score
 
-            return - \
-                Datasets.EVALUATED_BOARDS[fen_description] if player_color == chess.BLACK else Datasets.EVALUATED_BOARDS[fen_description]
+            return Datasets.EVALUATED_BOARDS[fen_description] if player_color == chess.WHITE else - Datasets.EVALUATED_BOARDS[fen_description]
 
         if is_maximizing_player :
 

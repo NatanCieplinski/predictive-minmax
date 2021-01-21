@@ -16,7 +16,7 @@ class MoveEvaluator:
             current_move_evaluation = Minimax.minimax(board, heuristic_depth - 1, -
                         np.inf, np.inf, False, color)
 
-            MoveEvaluator.update_heuristics_dataset(board, current_move_evaluation)
+            MoveEvaluator.update_heuristics_dataset(board, current_move_evaluation, color)
             board.pop()
 
             if current_move_evaluation > max_eval:
@@ -27,13 +27,16 @@ class MoveEvaluator:
         return best_move
 
     @staticmethod
-    def update_heuristics_dataset(board, current_move_evaluation):
+    def update_heuristics_dataset(board, current_move_evaluation, color):
+        h1 = Heuristics.material_heuristic(board) if color == chess.WHITE else - Heuristics.material_heuristic(board)
+        h2 = Heuristics.piece_square_table_heuristic(board) if color == chess.WHITE else - Heuristics.piece_square_table_heuristic(board)
+        h3 = Heuristics.attack_heuristic(board) if color == chess.WHITE else - Heuristics.attack_heuristic(board)
+        
         instance = [
-            Heuristics.material_heuristic(board),
-            Heuristics.piece_square_table_heuristic(board),
-            Heuristics.attack_heuristic(board),
+            h1,
+            h2 * 0.5,
+            h3 * 0.3,
             current_move_evaluation
         ]
-
         Datasets.HEURISTICS_DATA.append(instance)
 
