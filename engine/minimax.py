@@ -13,7 +13,6 @@ class Minimax:
             final_move_score = -10000 if player_color == chess.BLACK else 10000
 
             if not (fen_description in Datasets.EVALUATED_BOARDS):
-                print("I don't know this move")
                 Datasets.EVALUATED_BOARDS[fen_description] = Heuristics.evaluate_board(board)
                 if board.is_game_over():
                     if is_maximizing_player :

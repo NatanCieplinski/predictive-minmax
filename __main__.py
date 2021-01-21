@@ -13,7 +13,8 @@ def main():
         human_color = "White" if players[0] == "human" else "Black"
 
     board = chess.Board()
-    display = View(board)
+    if Config.SHOW_BOARD:
+        display = View(board)
 
     white_turn = True
     game_over = False
