@@ -4,6 +4,7 @@ import chess
 from engine.view import View
 from engine.move_evaluator import MoveEvaluator
 from config import Config
+from engine.datasets import Datasets
 
 def main():
     players = [Config.WHITE_PLAYER, Config.BLACK_PLAYER]
@@ -17,6 +18,7 @@ def main():
     white_turn = True
     game_over = False
 
+    Datasets.load()
     while not game_over:
         for player in players:
             if player == "heuristic":
@@ -44,6 +46,7 @@ def main():
 
             white_turn = not white_turn
 
+    Datasets.dump()
     return board.result()
 
 if __name__ == "__main__":

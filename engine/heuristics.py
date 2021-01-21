@@ -49,4 +49,4 @@ class Heuristics:
     def evaluate_board(board):
         """Calculate the total heuristic"""
         return Heuristics.material_heuristic(board) + 0.5 * \
-            Heuristics.piece_square_table_heuristic(board) + Heuristics.attack_heuristic(board)
+            Heuristics.piece_square_table_heuristic(board) + 0.3 * Heuristics.attack_heuristic(board)

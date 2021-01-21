@@ -42,7 +42,8 @@ class Minimax:
         else:
 
             min_evaluation = np.inf
-
+            
+            for move in board.legal_moves:
                 board.push(move)
                 evaluation = Minimax.minimax(
                     board, depth - 1, alpha, beta, True, player_color)
