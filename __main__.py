@@ -37,8 +37,6 @@ def main():
 
             if Config.SHOW_BOARD:
                 display.update_board(board)
-            if Config.MOVE_DELAY:
-                time.sleep(0.5)
 
             if board.is_game_over():
                 game_over = True

@@ -1,5 +1,4 @@
 from chessboard import display
-
 class View:
     def __init__(self, board):
         self.fen = board.fen()
