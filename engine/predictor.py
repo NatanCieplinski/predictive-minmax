@@ -1,15 +1,20 @@
 import keras
 import pandas as pd
+import os
 
 from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras import layers
+
 from engine.datasets import Datasets
 from config import Config
 
 class Predictor:
     def __init__(self):
         self.dataset = self.prepare_dataset(Datasets.HEURISTICS_DATA)
+        self.y = self.dataset.pop('H')
+        self.X = self.dataset
         self.scaler = MinMaxScaler().fit(self.dataset)
-        self.model = self.build_model([self.dataset.shape[1]-1])
+        self.model = self.build_model([self.dataset.shape[1]])
 
     def build_model(self, input_shape):
         model = keras.Sequential([
@@ -27,15 +32,13 @@ class Predictor:
         return model
 
     def train_model(self, patience=20, verbose=True):
-        y = self.dataset.pop('H')
-        X = self.dataset()
 
         early_stop = keras.callbacks.EarlyStopping(
             monitor='val_loss', patience=patience)
 
         early_history = self.model.fit(
-            X,
-            y,
+            self.X,
+            self.y,
             epochs=1000,
             validation_split=0.2,
             verbose=verbose,
@@ -45,19 +48,17 @@ class Predictor:
         return early_history
 
     def prepare_dataset(self, dataset):
-        columns_names = []
-        for counter in range(len(dataset[0])):
-            columns_names.append('h'+str(counter))
-        columns_names.append('H')
-        dataframe = pd.DataFrame(dataset, columns = columns_names)
+        dataframe = pd.DataFrame(dataset, columns = Config.DATASET_COLUMNS)
         return dataframe.drop_duplicates().apply(pd.to_numeric, errors='coerce', axis=1)
 
     def scale(self, instance):
         return self.scaler.transform(instance)
 
     def save_model(self):
+        print('Saving model...')
         self.model.save('./models/depth'+str(Config.DEPTH)+'/model')
 
     def load_model(self):
+        print('Loading model...')
         if os.path.exists('./models/depth'+str(Config.DEPTH)+'/model'):
             self.model = keras.models.load_model('./models/depth'+str(Config.DEPTH)+'/model')

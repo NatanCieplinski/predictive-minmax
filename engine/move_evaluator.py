@@ -38,9 +38,9 @@ class MoveEvaluator:
             h1 = Heuristics.material_heuristic(board) if color == chess.WHITE else - Heuristics.material_heuristic(board)
             h2 = Heuristics.piece_square_table_heuristic(board) if color == chess.WHITE else - Heuristics.piece_square_table_heuristic(board)
             h3 = Heuristics.attack_heuristic(board) if color == chess.WHITE else - Heuristics.attack_heuristic(board)
-            features = predictor.scale([h1, h2, h3])
+            features = predictor.scale([[h1, h2, h3]])
 
-            current_move_evaluation = predictor.predict(features)[0][0]
+            current_move_evaluation = predictor.model.predict(features)[0][0]
 
             board.pop()
 
