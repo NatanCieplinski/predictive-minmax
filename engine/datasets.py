@@ -21,7 +21,7 @@ class Datasets:
                 Datasets.EVALUATED_BOARDS = json.load(file)
 
         if os.path.exists('./datasets/heuristics.csv'):
-            with open('heuristics.csv', newline='') as file:
+            with open('./datasets/heuristics.csv', newline='') as file:
                 reader = csv.reader(file)
                 data = list(reader)
 
