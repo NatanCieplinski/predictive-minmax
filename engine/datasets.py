@@ -11,8 +11,8 @@ class Datasets:
     @staticmethod
     def dump():
         with open('./datasets/evaluated_boards.json', 'w') as file:
-	        json.dump(Datasets.EVALUATED_BOARDS, file)
             print('Saving boards...')
+            json.dump(Datasets.EVALUATED_BOARDS, file)
         pd.DataFrame(Datasets.HEURISTICS_DATA).drop_duplicates().to_csv("./datasets/heuristics.csv", index=False, header=None)
         print('Saving heauristics values...')
     
