@@ -42,7 +42,7 @@ def play_match(players, predictor = None):
 
             white_turn = not white_turn
 
-    print(board.result())
+    print('Match result: '+str(board.result()))
 
 def main():
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
