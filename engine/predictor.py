@@ -1,6 +1,7 @@
 import keras
 import pandas as pd
 import os
+import logging
 
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras import layers
@@ -48,6 +49,7 @@ class Predictor:
         return early_history
 
     def prepare_dataset(self, dataset):
+        logging.info('Preparing dataframe...')
         dataframe = pd.DataFrame(dataset, columns = Config.DATASET_COLUMNS)
         return dataframe.drop_duplicates().apply(pd.to_numeric, errors='coerce', axis=1)
 
@@ -55,16 +57,17 @@ class Predictor:
         return self.scaler.transform(instance)
 
     def update_dataset(self):
+        logging.info('Updating dataframe...')
         self.dataset = self.prepare_dataset(Datasets.HEURISTICS_DATA)
         self.y = self.dataset.pop('H')
         self.X = self.dataset
         self.scaler = MinMaxScaler().fit(self.dataset)
 
     def save_model(self):
-        print('Saving model...')
+        logging.info('Saving model...')
         self.model.save('./models/depth'+str(Config.DEPTH)+'/model')
 
     def load_model(self):
-        print('Loading model...')
+        logging.info('Loading model...')
         if os.path.exists('./models/depth'+str(Config.DEPTH)+'/model'):
             self.model = keras.models.load_model('./models/depth'+str(Config.DEPTH)+'/model')

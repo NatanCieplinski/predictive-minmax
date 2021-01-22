@@ -1,5 +1,6 @@
 import time
 import chess
+import logging, sys
 
 from engine.view import View
 from engine.move_evaluator import MoveEvaluator
@@ -7,7 +8,7 @@ from config import Config
 from engine.datasets import Datasets
 from engine.predictor import Predictor
 
-def play_match(players, predictor):
+def play_match(players, predictor = None):
     board = chess.Board()
     if Config.SHOW_BOARD:
         display = View(board)
@@ -41,7 +42,10 @@ def play_match(players, predictor):
 
             white_turn = not white_turn
 
+    print(board.result())
+
 def main():
+    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
     players = [Config.WHITE_PLAYER, Config.BLACK_PLAYER]
     human_color = None
     if "human" in players:
@@ -54,15 +58,22 @@ def main():
         predictor.load_model()
 
     for counter in range(1000): 
-        print('Playing match number '+str(counter))
-        play_match(players, predictor)
-        print(board.result())
-        predictor.update_dataset()
-        predictor.train_model()
+        logging.info('Playing match number %d', counter)
+        start = time.time()
+        if "ai" in players:
+            play_match(players, predictor)
+            end = time.time()
+            logging.info('The match lasted %d seconds', end - start)
+            predictor.update_dataset()
+            predictor.train_model()
+            predictor.save_model()
+        else:
+            play_match(players)
+            end = time.time()
+            logging.info('The match lasted %d seconds', end - start)
+    
+        Datasets.dump()
 
-    Datasets.dump()
-    if "ai" in players:
-        predictor.save_model()
 
 if __name__ == "__main__":
     main()
