@@ -1,5 +1,5 @@
 class Config:
     DEPTH = 3
-    WHITE_PLAYER = "heuristic"
+    WHITE_PLAYER = "ai"
     BLACK_PLAYER = "heuristic"
     SHOW_BOARD = True
