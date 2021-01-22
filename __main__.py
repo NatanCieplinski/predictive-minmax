@@ -53,7 +53,8 @@ def main():
         predictor = Predictor()
         predictor.load_model()
 
-    for counter in range(2): 
+    for counter in range(1000): 
+        print('Playing match number '+str(counter))
         play_match(players, predictor)
         print(board.result())
         predictor.update_dataset()

@@ -24,7 +24,6 @@ class MoveEvaluator:
                 max_eval = current_move_evaluation
                 best_move = move
 
-        print(move)
         return best_move
 
     @staticmethod
@@ -48,7 +47,6 @@ class MoveEvaluator:
                 max_eval = current_move_evaluation
                 best_move = move
 
-        print(move)
         return best_move
 
 
