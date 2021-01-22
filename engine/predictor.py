@@ -54,6 +54,12 @@ class Predictor:
     def scale(self, instance):
         return self.scaler.transform(instance)
 
+    def update_dataset(self):
+        self.dataset = self.prepare_dataset(Datasets.HEURISTICS_DATA)
+        self.y = self.dataset.pop('H')
+        self.X = self.dataset
+        self.scaler = MinMaxScaler().fit(self.dataset)
+
     def save_model(self):
         print('Saving model...')
         self.model.save('./models/depth'+str(Config.DEPTH)+'/model')
