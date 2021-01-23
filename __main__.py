@@ -45,7 +45,7 @@ def play_match(players, predictor = None):
     print('Match result: '+str(board.result()))
 
 def main():
-    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
     players = [Config.WHITE_PLAYER, Config.BLACK_PLAYER]
     human_color = None
     if "human" in players:
@@ -57,7 +57,7 @@ def main():
         predictor = Predictor()
         predictor.load_model()
 
-    for counter in range(1000): 
+    for counter in range(1000 ): 
         logging.info('Playing match number %d', counter)
         start = time.time()
         if "ai" in players:
