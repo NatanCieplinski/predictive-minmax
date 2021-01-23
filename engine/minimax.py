@@ -12,6 +12,9 @@ class Minimax:
 
             final_move_score = -10000 if player_color == chess.BLACK else 10000
 
+            if not board.is_checkmate():
+                final_move_score = 10000 if player_color == chess.BLACK else -10000
+
             if not (fen_description in Datasets.EVALUATED_BOARDS):
                 Datasets.EVALUATED_BOARDS[fen_description] = Heuristics.evaluate_board(board)
                 if board.is_game_over():
@@ -41,7 +44,7 @@ class Minimax:
         else:
 
             min_evaluation = np.inf
-            
+
             for move in board.legal_moves:
                 board.push(move)
                 evaluation = Minimax.minimax(
