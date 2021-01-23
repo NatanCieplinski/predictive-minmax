@@ -57,7 +57,7 @@ def main():
         predictor = Predictor()
         predictor.load_model()
 
-    for counter in range(1000 ): 
+    for counter in range(1000): 
         logging.info('Playing match number %d', counter)
         start = time.time()
         if "ai" in players:
