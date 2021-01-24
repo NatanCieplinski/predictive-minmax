@@ -8,23 +8,22 @@ class Minimax:
     @staticmethod
     def minimax(board, depth, alpha, beta, is_maximizing_player , player_color, predictor = False):
         if depth == 0 or board.is_game_over():
-            fen_description = board.fen()
 
-            final_move_score = -10000 if player_color == chess.BLACK else 10000
-
-            if not board.is_checkmate():
+            if board.is_checkmate():
+                final_move_score = -10000 if player_color == chess.BLACK else 10000
+            else:
                 final_move_score = 10000 if player_color == chess.BLACK else -10000
             
             if not predictor:
-                if not (fen_description in Datasets.EVALUATED_BOARDS):
-                    Datasets.EVALUATED_BOARDS[fen_description] = Heuristics.evaluate_board(board)
-                    if board.is_game_over():
-                        if is_maximizing_player :
-                            Datasets.EVALUATED_BOARDS[fen_description] += -final_move_score
-                        else:
-                            Datasets.EVALUATED_BOARDS[fen_description] += final_move_score
+                evaluation = Heuristics.evaluate_board(board)
+                if board.is_game_over():
+                    if is_maximizing_player :
+                        evaluation += -final_move_score
+                    else:
+                        evaluation += final_move_score
 
-                return Datasets.EVALUATED_BOARDS[fen_description] if player_color == chess.WHITE else - Datasets.EVALUATED_BOARDS[fen_description]
+                return evaluation if player_color == chess.WHITE else - evaluation
+                
             else:
                 h1 = Heuristics.material_heuristic(board) if color == chess.WHITE else - Heuristics.material_heuristic(board)
                 h2 = Heuristics.piece_square_table_heuristic(board) if color == chess.WHITE else - Heuristics.piece_square_table_heuristic(board)

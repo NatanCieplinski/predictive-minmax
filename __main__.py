@@ -70,9 +70,9 @@ def main():
             play_match(players, predictor)
             end = time.time()
             logging.info('The match lasted %d seconds', end - start)
-            predictor.update_dataset()
-            predictor.train_model()
-            predictor.save_model()
+            #predictor.update_dataset()
+            #predictor.train_model()
+            #predictor.save_model()
         else:
             play_match(players)
             end = time.time()
