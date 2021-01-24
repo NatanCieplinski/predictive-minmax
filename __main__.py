@@ -15,11 +15,12 @@ def play_match(players, predictor = None):
 
     white_turn = True
     game_over = False
+    number_of_moves = 0.0
 
     while not game_over:
         for player in players:
             if player == "heuristic":
-                move = MoveEvaluator.find_best_move(board, Config.DEPTH, white_turn)
+                move = MoveEvaluator.find_best_move(board, Config.DEPTH, white_turn, False)
                 board.push(move)
             if player == "human":
                 move_is_valid = True
@@ -33,6 +34,9 @@ def play_match(players, predictor = None):
             if player == "ai":
                 move = MoveEvaluator.predict_best_move(board, predictor, white_turn)
                 board.push(move)
+            if player == "advanced_ai":
+                move = MoveEvaluator.find_best_move(board, Config.DEPTH, white_turn, predictor)
+                board.push(move)
 
             if Config.SHOW_BOARD:
                 display.update_board(board)
@@ -40,9 +44,11 @@ def play_match(players, predictor = None):
             if board.is_game_over():
                 game_over = True
 
+            number_of_moves += 1
             white_turn = not white_turn
 
     print('Match result: '+str(board.result()))
+    print('The match lasted '+str(number_of_moves // 2 + 1)+' moves.')
 
 def main():
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
@@ -60,7 +66,7 @@ def main():
     for counter in range(1000): 
         logging.info('Playing match number %d', counter)
         start = time.time()
-        if "ai" in players:
+        if "ai" in players or "advanced_ai" in players:
             play_match(players, predictor)
             end = time.time()
             logging.info('The match lasted %d seconds', end - start)
