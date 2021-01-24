@@ -11,7 +11,7 @@ class Datasets:
     @staticmethod
     def dump():
         pd.DataFrame(Datasets.HEURISTICS_DATA).drop_duplicates().to_csv("./datasets/heuristics.csv", index=False, header=None)
-        logging.info('Saving heauristics values...')
+        logging.info('Saving heuristics values...')
     
     @staticmethod
     def load():
@@ -20,4 +20,5 @@ class Datasets:
                 logging.info('Loading heuristics values...')
                 reader = csv.reader(file)
                 Datasets.HEURISTICS_DATA = list(reader)
+                print("Dataset entries: "+str(len(Datasets.HEURISTICS_DATA)))
 

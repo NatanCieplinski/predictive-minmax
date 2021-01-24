@@ -8,19 +8,19 @@ from config import Config
 from engine.datasets import Datasets
 from engine.predictor import Predictor
 
-def play_match(players, predictor = None):
+def play_match(players, predictor):
     board = chess.Board()
     if Config.SHOW_BOARD:
         display = View(board)
 
-    white_turn = True
+    is_white_turn = True
     game_over = False
     number_of_moves = 0.0
 
     while not game_over:
         for player in players:
             if player == "heuristic":
-                move = MoveEvaluator.find_best_move(board, Config.DEPTH, white_turn, False)
+                move = MoveEvaluator.find_best_move(board, Config.DEPTH, is_white_turn, False)
                 board.push(move)
             if player == "human":
                 move_is_valid = True
@@ -32,10 +32,10 @@ def play_match(players, predictor = None):
                     except BaseException:
                         move_is_valid = False
             if player == "ai":
-                move = MoveEvaluator.predict_best_move(board, predictor, white_turn)
+                move = MoveEvaluator.predict_best_move(board, predictor, is_white_turn)
                 board.push(move)
             if player == "advanced_ai":
-                move = MoveEvaluator.find_best_move(board, Config.DEPTH, white_turn, predictor)
+                move = MoveEvaluator.find_best_move(board, Config.DEPTH, is_white_turn, predictor)
                 board.push(move)
 
             if Config.SHOW_BOARD:
@@ -43,9 +43,10 @@ def play_match(players, predictor = None):
 
             if board.is_game_over():
                 game_over = True
+                break
 
             number_of_moves += 1
-            white_turn = not white_turn
+            is_white_turn = not is_white_turn
 
     print('Match result: '+str(board.result()))
     print('The match lasted '+str(number_of_moves // 2 + 1)+' moves.')
@@ -63,16 +64,17 @@ def main():
         predictor = Predictor()
         predictor.load_model()
 
-    for counter in range(1000): 
+    for counter in range(50): 
         logging.info('Playing match number %d', counter)
         start = time.time()
         if "ai" in players or "advanced_ai" in players:
             play_match(players, predictor)
             end = time.time()
             logging.info('The match lasted %d seconds', end - start)
-            #predictor.update_dataset()
-            #predictor.train_model()
-            #predictor.save_model()
+            if Config.TRAINING_MODE:
+                predictor.update_dataset()
+                predictor.train_model()
+                predictor.save_model()
         else:
             play_match(players)
             end = time.time()
